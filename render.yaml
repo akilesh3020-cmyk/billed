@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: billed
+    runtime: python
+    plan: starter            # persistent disk needs a paid plan; free works for the demo but data resets on redeploy
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    disk:
+      name: billed-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEMO_PASS
+        value: demo1234
+      - key: DEMO_TOKEN
+        generateValue: true
